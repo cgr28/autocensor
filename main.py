@@ -19,6 +19,7 @@ num_cens = 0 # num of words censored
 imgs = [] # contains all images
 black = False # when True censor bars will be black
 white = False # when True censor bars will be white
+min_conf = 1.0 # decides the minimum confidence
 
 try:
     if sys.argv[2] == "black":
@@ -69,7 +70,7 @@ for img, f in imgs:
         text = results["text"][i]
         conf = float(results["conf"][i])
 
-        if conf > 1:
+        if conf > min_conf:
             num_words += 1
             text = text.strip(string.punctuation).lower() # cleaning text by removing leading/trailing punctuation and setting to lowercase
             # creating blur rect
