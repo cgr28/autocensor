@@ -34,7 +34,7 @@ The words that were censored and their respective confidence, will be recorded i
 ## Example
 For this example the words best, times, and foolishness will be censored from *example.png*.
 <p>
-    <img src="https://raw.githubusercontent.com/cgr28/autocensor/main/example.png" alt="example"/>
+    <img src="https://raw.githubusercontent.com/cgr28/autocensor/main/example.png" alt="example"/></br>
     <em>the image example.png before being censored</em>
 </p>
 
@@ -49,6 +49,6 @@ For this example the words best, times, and foolishness will be censored from *e
    python main.py example.png
    ```
 <p>
-    <img src="https://raw.githubusercontent.com/cgr28/autocensor/main/censor-example.png" alt="example"/>
+    <img src="https://raw.githubusercontent.com/cgr28/autocensor/main/censor-example.png" alt="example"/></br>
     <em>the censored image in censoredimgs/censored-example.png</em>
 </p>
