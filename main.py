@@ -38,6 +38,7 @@ else:
 
 path = sys.argv[1]
 
+# checks if provided path is a dir or a file
 if os.path.isfile(path):
     img = cv2.imread(path, cv2.IMREAD_COLOR)
     imgs.append([img, path])
@@ -50,13 +51,14 @@ elif os.path.isdir(path):
             except:
                 print("Couldn't open ", file, ".")
 else:
+    # error when trying to get file or dir EXIT
     print("Error.")
     sys.exit()
 
 for img, f in imgs:
 
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    results = pytesseract.image_to_data(img_rgb, output_type=Output.DICT)
+    results = pytesseract.image_to_data(img_rgb, output_type=Output.DICT) # detects words in images
 
     out.write(f"IMAGE: {f}\n\n")
 
@@ -73,24 +75,26 @@ for img, f in imgs:
         if conf > min_conf:
             num_words += 1
             text = text.strip(string.punctuation).lower() # cleaning text by removing leading/trailing punctuation and setting to lowercase
-            # creating blur rect
         
+            # censors accoring to arg provided by the user
             if black:
-                cens = np.zeros([h, w, 3], dtype=int)
+                cens = np.zeros([h, w, 3], dtype=int) # an array full of 0s
             elif white:
-                cens = np.full([h, w, 3], 255)
+                cens = np.full([h, w, 3], 255) # an array full of 255s
             else:
-                cens = img[y:y+h, x:x+w]
+                cens = img[y:y+h, x:x+w] # dimensions of the word
                 cens = cv2.GaussianBlur(cens, (23, 23), 30)
 
             if cens_all:
-                out.write(f"\tcensored {text.upper()} with {conf}% confidence\n")
+                out.write(f"\tcensored {text.upper()} with {conf}% confidence\n") # logging
                 img[y:y+cens.shape[0], x:x+cens.shape[1]] = cens
                 num_cens += 1
             elif text in cens_words:
-                out.write(f"\tcensored {text.upper()} with {conf}% confidence\n")
+                out.write(f"\tcensored {text.upper()} with {conf}% confidence\n") # logging
                 img[y:y+cens.shape[0], x:x+cens.shape[1]] = cens
                 num_cens += 1
+    
+    # outputs the imgs to the dir censoredimgs
     cv2.imwrite(f"./censoredimgs/censored-{f}", img)
     perc = "%.2f" % (num_cens/num_words * 100)
     out.write(f"\ncensored {perc}% ({num_cens}/{num_words}) of words\n\n")
